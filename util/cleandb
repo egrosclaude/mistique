@@ -1,0 +1,43 @@
+#!/usr/bin/perl -n -s
+
+BEGIN {
+	if(! $pro) {
+		print STDERR "Indique proveedor (-pro='PROVEEDOR')\n";
+		exit(1);
+	}
+	open FAIL, ">fail.csv" || die "can't open FAIL";
+	open CLEAN, ">clean.csv" || die "cant't open CLEAN";
+	printf CLEAN "%s,%s,%s,%s,%s\n",qw(art prov vol un pre);
+}
+END {
+	close FAIL;
+	close CLEAN;
+}
+
+if(/([^,]+),([^,]+),([.\d]+),/) {
+	$fail = 1;
+	($art, $vol, $pre) = ($1, $2, $3);
+	$art =~ s/\s+$//;
+	if($vol =~ /(\d+) *gr/i) {$vol = $1; $un = 'g'; $fail=0;}
+	if($vol =~ /(\d+) *kg/i) {$vol = $1 * 1000; $un = 'g'; $fail=0;}
+	if($vol =~ /x *(\d+) *un/i) {$vol = $1; $un = 'u'; $fail=0;}
+	if($vol =~ /x *(\d+) *mt/i) {$vol = $1; $un = 'm'; $fail=0;}
+	if($vol =~ /(\d+) *cc/i) {$vol = $1; $un = 'cc'; $fail=0;}
+	if($vol =~ /(\d+) *lts*/i) {$vol = $1 * 1000; $un = 'cc'; $fail=0;}
+	if($vol =~ /x *litros*/i) {$vol = 1000; $un = 'cc'; $fail=0;}
+	print FAIL $_ if($fail);
+	printf CLEAN "%s,%s,%s,%s,%s\n", $art, $pro, $vol, $un, $pre;
+	@s = split ",";
+	if($ae = $s[4]) {
+		if($ae =~ /x *(\d+) *ml *\$*(\d+)/) {
+			($aevol, $aepre) = ($1, $2);
+		} else {
+			($art, $vol, $un, $pre) = 
+				('AE '.$ae, $aevol, 'cc', $aepre);
+			printf CLEAN "%s,%s,%s,%s,%s\n", 
+				$art, $pro, $vol, $un, $pre;
+		}
+	}
+} else {
+	print FAIL $_;
+}
