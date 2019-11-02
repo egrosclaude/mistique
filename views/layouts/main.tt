@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="<% settings.charset %>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title><% title %></title>
+  <link rel="stylesheet" href="<% request.uri_base %>/css/style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+  		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<!-- Grab jQuery from a CDN, fall back to local if necessary -->
+<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">/* <![CDATA[ */
+    !window.jQuery && document.write('<script type="text/javascript" src="<% request.uri_base %>/javascripts/jquery.js"><\/script>')
+/* ]]> */</script>
+
+</head>
+<body>
+<div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<!--  <a class="navbar-brand" href="#">Navbar</a> -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" href="/insumos">Insumos<span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" href="/formulas">Fórmulas</a>
+      <a class="nav-item nav-link" href="/catalogo">Catálogo</a>
+      <a class="nav-item nav-link" href="/productos">Productos</a>
+      <a class="nav-item nav-link" href="/informes">Informes</a>
+    </div>
+  </div>
+</nav>
+
+</div>
+<% content %>
+<!-- <div id="footer">
+Powered by <a href="http://perldancer.org/">Dancer2</a> <% dancer_version %>
+</div>
+-->
+</body>
+</html>
+
+
+

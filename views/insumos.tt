@@ -1,0 +1,128 @@
+
+<div class="container-fluid">
+      <div id="content">
+        <div class="container100">
+	<% IF insumos.size %>
+	  <div class="table-responsive">
+	  <table class="table table-striped table-condensed table-sm my-4">
+	  <tbody>
+	  <% FOREACH ins IN insumos %>
+	  	<tr id="tr-<% ins.item('_id') %>" onclick="fireModal('<% ins.item('_id') %>');" >
+		    <td class="text-left"><% ins.art %></td>
+		    <td class="text-right"><% ins.vol %> <% ins.un %></td>
+		    <td><% ins.prov %></td>
+		    <td class="text-right"><% ins.pre %></td>
+		</tr>
+	  <% END %>
+	  </tbody>
+	  </table>
+          </div>
+	<% ELSE %>
+	  <em>Sin insumos.</em>
+	<% END %>
+	</div>
+      </div>
+</div>
+
+<div class="modal" id="modal-insumo">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="insumo-titulo">Insumo</h5>
+        <button type="button" class="closeModal btn btn-light">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="container-fluid">
+ 	  <form id="insumo-datos-form" action="/insumos/edit" method="POST">
+	    <input type="hidden" name="id" value="<% ins.item('_id') %>">
+	    <div class="form-group">
+	        <label for="campo-art">Descripción</label>
+        	<input type="text" class="form-control" id="campo-art" name="art" value="<% ins.art %>">
+      	    </div>
+	    <div class="row">
+		    <div class="col">
+			    <div class="form-group">
+				<label for="campo-art">Volumen</label>
+				<input type="text" class="form-control" id="campo-vol" name="vol" value="<% ins.vol %>">
+			    </div>
+		    </div>
+
+		    <div class="col">
+			    <div class="form-group">
+				<label for="campo-un">Unidades</label>
+				<select class="form-control" id="campo-un" name="un">
+					<option>g</option>
+					<option>cc</option>
+					<option>m</option>
+				</select>
+			    </div>
+		    </div>
+            </div>
+
+	    <div class="row">
+		    <div class="col">
+			    <div class="form-group">
+				<label for="campo-prov">Proveedor</label>
+				<select class="form-control" id="campo-prov" name="prov">
+					<option>chemix</option>
+					<option>quimisur</option>
+					<option>del bosque</option>
+				</select>
+			    </div>
+		    </div>
+		    <div class="col">
+			    <div class="form-group">
+				<label for="campo-art">Precio de costo</label>
+				<input type="number" class="form-control text-right" id="campo-pre" name="pre" value="<% ins.pre %>">
+			    </div>
+		    </div>
+            </div>
+
+	  </form>
+      	</div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="closeModal btn btn-primary">Grabar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src='javascripts/ajax.js'></script>
+
+<script>
+var modal = document.getElementById("modal-insumo");
+var spanX = document.getElementsByClassName("closeModal")[0];
+var spanC = document.getElementsByClassName("closeModal")[1];
+spanX.onclick = function() { modal.style.display = "none"; }
+spanC.onclick = spanX.onclick;
+window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
+var closeModal = function (id) { 
+	modal.style.display="none"; 
+}
+var setById = (id,value) => { document.getElementById(id).innerHTML = value; };
+var fireModal = function(id) {
+	Ajax.get('insumos/view/'+id, (result) => {
+		var json = JSON.parse(result);
+		var titulo = json.art + ' ' + json.prov + ' ' + json.vol + ' ' + json.un;
+		setById('insumo-titulo',titulo);
+		//var borrar = document.getElementById('insumo-nombre-borrar');
+		//borrar.innerHTML = json.art;
+
+		var lista = ["art", "vol", "un", "prov", "pre"];
+		for (var field in lista) {
+			var d = document.getElementById('campo-'+lista[field]);
+			d.value = json[lista[field]];
+		}
+	});
+	modal.style.display="block"; 
+};
+</script>
+
+
+
