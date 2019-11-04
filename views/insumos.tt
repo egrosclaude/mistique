@@ -87,7 +87,9 @@
       </div>
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="button" class="closeModal btn btn-primary">Grabar</button>
+        <button type="button" class="prevDoc btn btn-primary">&lt;</button>
+        <button type="button" class="nextDoc btn btn-primary">&gt;</button>
+        <button type="button" class="closeModal btn btn-primary">Guardar</button>
       </div>
     </div>
   </div>
@@ -99,6 +101,15 @@
 var modal = document.getElementById("modal-insumo");
 var spanX = document.getElementsByClassName("closeModal")[0];
 var spanC = document.getElementsByClassName("closeModal")[1];
+var prevDoc = document.getElementsByClassName("prevDoc")[0];
+var nextDoc = document.getElementsByClassName("nextDoc")[0];
+var idCursor;
+prevDoc.onclick = function() {
+	Ajax.get('insumos/prev/'+idCursor,(result) => {
+		idCursor = id;
+		setContent(idCursor);
+	}
+};
 spanX.onclick = function() { modal.style.display = "none"; }
 spanC.onclick = spanX.onclick;
 window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
@@ -107,6 +118,11 @@ var closeModal = function (id) {
 }
 var setById = (id,value) => { document.getElementById(id).innerHTML = value; };
 var fireModal = function(id) {
+	idCursor = id;
+	setContent(idCursor);
+	modal.style.display="block"; 
+};
+var setContent = function(id) {
 	Ajax.get('insumos/view/'+id, (result) => {
 		var json = JSON.parse(result);
 		var titulo = json.art + ' ' + json.prov + ' ' + json.vol + ' ' + json.un;
@@ -120,7 +136,6 @@ var fireModal = function(id) {
 			d.value = json[lista[field]];
 		}
 	});
-	modal.style.display="block"; 
 };
 </script>
 
