@@ -4,10 +4,10 @@
         <div class="container100">
 	<% IF insumos.size %>
 	  <div class="table-responsive">
-	  <table class="table table-striped table-condensed table-sm my-4">
+	  <table id="table-insumos" class="table table-striped table-condensed table-sm my-4">
 	  <tbody>
 	  <% FOREACH ins IN insumos %>
-	  	<tr id="tr-<% ins.item('_id') %>" onclick="fireModal('<% ins.item('_id') %>');" >
+	  	<tr id="<% ins.item('_id') %>" onclick="fireModal('<% ins.item('_id') %>',this);" >
 		    <td class="text-left"><% ins.art %></td>
 		    <td class="text-right"><% ins.vol %> <% ins.un %></td>
 		    <td><% ins.prov %></td>
@@ -104,11 +104,30 @@ var spanC = document.getElementsByClassName("closeModal")[1];
 var prevDoc = document.getElementsByClassName("prevDoc")[0];
 var nextDoc = document.getElementsByClassName("nextDoc")[0];
 var idCursor;
+var rowCursor;
+var idOf = function(tr) {
+	var table = document.getElementById("table-insumos");
+	var rows = table.getElementsByTagName("tr");
+	var row = rows[tr];
+	var id = row.id;
+	console.log(id);
+	return id;
+};
 prevDoc.onclick = function() {
-	Ajax.get('insumos/prev/'+idCursor,(result) => {
-		idCursor = id;
+	console.log(idCursor);
+	rowCursor = ((rowCursor - 1) < 1)? 0 : rowCursor - 1;
+	idCursor = idOf(rowCursor);
+	Ajax.get('insumos/view/'+idCursor,(result) => {
 		setContent(idCursor);
-	}
+	});
+};
+nextDoc.onclick = function() {
+	console.log(idCursor);
+	rowCursor = (rowCursor + 1);
+	idCursor = idOf(rowCursor);
+	Ajax.get('insumos/view/'+idCursor,(result) => {
+		setContent(idCursor);
+	});
 };
 spanX.onclick = function() { modal.style.display = "none"; }
 spanC.onclick = spanX.onclick;
@@ -117,8 +136,9 @@ var closeModal = function (id) {
 	modal.style.display="none"; 
 }
 var setById = (id,value) => { document.getElementById(id).innerHTML = value; };
-var fireModal = function(id) {
+var fireModal = function(id,row) {
 	idCursor = id;
+	rowCursor = row.rowIndex;
 	setContent(idCursor);
 	modal.style.display="block"; 
 };

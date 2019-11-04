@@ -16,10 +16,20 @@ get '/' => sub {
 get '/insumos' => sub {
 	template 'insumos' => { insumos => mistique::insumos->get_all() };
 };
+
 get '/insumos/view/:id' => sub {
         my $id = route_parameters->get('id'); 
-
 	return mistique::insumos->get_as_JSON($id);
+};
+
+get '/insumos/prev/:id' => sub {
+        my $id = route_parameters->get('id'); 
+	return mistique::insumos->get_prev_as_JSON($id);
+};
+
+get '/insumos/next/:id' => sub {
+        my $id = route_parameters->get('id'); 
+	return mistique::insumos->get_next_as_JSON($id);
 };
 
 
