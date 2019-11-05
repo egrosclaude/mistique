@@ -32,8 +32,6 @@ get '/insumos/next/:id' => sub {
 	return mistique::insumos->get_next_as_JSON($id);
 };
 
-put '/' => sub {};
-
 put '/insumos/put/:id' => sub {
 	my $id = route_parameters->get('id');
 	my $json = JSON::MaybeXS->new;

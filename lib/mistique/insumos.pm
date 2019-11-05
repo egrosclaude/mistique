@@ -43,10 +43,6 @@ sub get_prev_as_JSON {
 		)->result->{_docs}[0];
 
 	return $json->encode($r);
-	#	return $json->encode($coll->find(
-	#		{ _id => { '$lt' => $oid }},
-	#		{  limit => 1 }
-	#	));
 }
 
 sub get_all {
