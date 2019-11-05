@@ -1,13 +1,12 @@
 package mistique;
 use Dancer2;
-
 our $VERSION = '0.1';
+
+use utf8;
+use Encode; 
 
 use MongoDB ();
 use mistique::insumos;
-
-#use JSON::MaybeXS;
-#use BSON::Types ':all';
 
 get '/' => sub {
     template 'index' => { 'title' => 'mistique' };
@@ -35,7 +34,7 @@ get '/insumos/next/:id' => sub {
 put '/insumos/put/:id' => sub {
 	my $id = route_parameters->get('id');
 	my $json = JSON::MaybeXS->new;
-	my $doc = $json->decode(request->body);
+	my $doc = $json->decode(decode_utf8(request->body));
 	mistique::insumos->put($id, $doc);
 	delayed { content "200" ; }
 };

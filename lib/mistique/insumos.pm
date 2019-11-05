@@ -3,6 +3,7 @@ use MongoDB ();
 use JSON::MaybeXS;
 use BSON::Types ':all';
 
+
 my $client = MongoDB::MongoClient->new(host=>'localhost', port=>27017);
 my $db = $client->get_database('mistica');
 my $coll = $db->get_collection('insumos'); 
@@ -72,7 +73,6 @@ sub get_all_as_JSON {
 
 sub put {
 	my ($self, $id, $doc) = @_;
-
 	return $coll->replace_one({'_id' => mistique::insumos->makeOID($id)},$doc);
 }
 
