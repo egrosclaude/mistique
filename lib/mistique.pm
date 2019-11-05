@@ -32,17 +32,14 @@ get '/insumos/next/:id' => sub {
 	return mistique::insumos->get_next_as_JSON($id);
 };
 
+put '/' => sub {};
 
-#get '/insumosx' => sub {
-#    my $c = MongoDB::MongoClient->new(host=>'localhost',port=>27017);
-#   my $db = $c->get_database('mistica');
-#
-#   my $in = $db->get_collection('insumos');
-#   my @data = $in->find()->all;
-#
-#   template 'insumos' => { 
-#	    insumos => \@data, 
-#   };
-#};
+put '/insumos/put/:id' => sub {
+	my $id = route_parameters->get('id');
+	my $json = JSON::MaybeXS->new;
+	my $doc = $json->decode(request->body);
+	mistique::insumos->put($id, $doc);
+	delayed { content "200" ; }
+};
 
 true;

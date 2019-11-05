@@ -74,4 +74,10 @@ sub get_all_as_JSON {
 	return \@list;
 }
 
+sub put {
+	my ($self, $id, $doc) = @_;
+
+	return $coll->replace_one({'_id' => mistique::insumos->makeOID($id)},$doc);
+}
+
 true;

@@ -1,8 +1,7 @@
 var Ajax = {};
 
-
 Ajax.get = (url, callback) => {
-	xhr =  new XMLHttpRequest();
+	var xhr =  new XMLHttpRequest();
 	xhr.open('GET', url, false);
 	xhr.onerror = () => {
 		console.error('Request failed!');
@@ -16,6 +15,22 @@ Ajax.get = (url, callback) => {
 	};
 	xhr.send();
 };
+
+Ajax.put = (url,data) => {
+	var xhr = new XMLHttpRequest();
+	xhr.open('PUT', url);
+	xhr.onerror = () => {
+		console.error('Request failed!');
+	};
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.onload = function() {
+	    if (xhr.status === 200) {
+	        var userInfo = JSON.parse(xhr.responseText);
+	    }
+	};
+	xhr.send(JSON.stringify(data));
+};
+
 
 /*
 fetch('/my/name').then( 
@@ -91,17 +106,4 @@ ajax.param = function param(object) {
     }
     return encodedString;
 };
-
-ajax.put = (json, url) => {
-	var xhr = new XMLHttpRequest();
-	xhr.open('PUT', url);
-	xhr.setRequestHeader('Content-Type', 'application/json');
-	xhr.onload = function() {
-	    if (xhr.status === 200) {
-	        var userInfo = JSON.parse(xhr.responseText);
-	    }
-	};
-	xhr.send(JSON.stringify(url));
-};
 */
-
