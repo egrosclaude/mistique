@@ -28,7 +28,6 @@ Ajax.put = (url,data) => {
 	        var userInfo = JSON.parse(xhr.responseText);
 	    }
 	};
-	var j = JSON.stringify(data);
 	xhr.send(JSON.stringify(data));
 };
 

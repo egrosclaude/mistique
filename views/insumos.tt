@@ -1,4 +1,4 @@
-
+<h4>Insumos</h4><hr>
 <div class="container-fluid">
       <div id="content">
         <div class="container100">
@@ -87,6 +87,7 @@
 					<option>chemix</option>
 					<option>quimisur</option>
 					<option>del bosque</option>
+					<option>devas</option>
 				</select>
 			    </div>
 		    </div>

@@ -21,16 +21,6 @@ get '/insumos/view/:id' => sub {
 	return mistique::insumos->get_as_JSON($id);
 };
 
-get '/insumos/prev/:id' => sub {
-        my $id = route_parameters->get('id'); 
-	return mistique::insumos->get_prev_as_JSON($id);
-};
-
-get '/insumos/next/:id' => sub {
-        my $id = route_parameters->get('id'); 
-	return mistique::insumos->get_next_as_JSON($id);
-};
-
 put '/insumos/put/:id' => sub {
 	my $id = route_parameters->get('id');
 	my $json = JSON::MaybeXS->new;
@@ -38,5 +28,29 @@ put '/insumos/put/:id' => sub {
 	mistique::insumos->put($id, $doc);
 	delayed { content "200" ; }
 };
+
+#-------------------------------------------------------------------
+
+use mistique::marcas;
+
+get '/marcas' => sub {
+	template 'marcas' => { marcas => mistique::marcas->get_all() };
+};
+
+get '/marcas/view/:id' => sub {
+        my $id = route_parameters->get('id'); 
+	return mistique::marcas->get_as_JSON($id);
+};
+
+put '/marcas/put/:id?' => sub {
+	my $id = route_parameters->get('id');
+	use Data::Dumper; print "mistique ".Dumper($id);
+	my $json = JSON::MaybeXS->new;
+	my $doc = $json->decode(decode_utf8(request->body));
+	mistique::marcas->put($id, $doc);
+	delayed { content "200" ; }
+};
+
+#-------------------------------------------------------------------
 
 true;

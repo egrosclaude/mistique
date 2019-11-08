@@ -26,6 +26,7 @@ engines:
      template_toolkit:
        start_tag: '<%'
        end_tag:   '%>'
+       EVAL_PERL: true
 
 # session engine
 #

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-
+use lib "lib";
 use mistique;
 use Test::More tests => 2;
 use Plack::Test;
