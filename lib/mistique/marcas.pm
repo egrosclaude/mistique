@@ -36,6 +36,13 @@ sub get_all {
 	return \@i;
 }
 
+sub get_all_sort {
+	my ($self,$field) = @_;
+
+	my @i = $coll->find({},{sort => {"cat" => 1}})->result->{_docs};
+	return @i;
+}
+
 sub get_all_filter {
 	my ($self,$filter) = @_;
 

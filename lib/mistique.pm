@@ -34,7 +34,29 @@ put '/insumos/put/:id' => sub {
 use mistique::marcas;
 
 get '/marcas' => sub {
-	template 'marcas' => { marcas => mistique::marcas->get_all() };
+	#	my @ms = mistique::marcas->get_all_sort();
+	#for my $m (@{$ms[0]}) {
+	#	print Dumper($m->{cat});
+	#}
+
+	my @ms = mistique::marcas->get_all_sort();
+	my $cat = "";
+	my @pl = ();
+	my @tl = ();
+	for my $m (@{$ms[0]}) {
+		if($m->{cat} eq $cat) {
+			push @pl, $m;
+		} else {
+			push @tl, {cat => $cat, pl => [@pl]} if @pl;
+			@pl = ();
+			push @pl, $m;
+			$cat = $m->{cat};
+		}
+	} 
+	push @tl, {cat => $cat, pl => [@pl]} if @pl;
+
+	#use Data::Dumper; print Dumper([@tl]);
+	template 'marcas' => { cats => [@tl]};
 };
 
 get '/marcas/view/:id' => sub {

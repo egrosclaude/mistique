@@ -3,15 +3,7 @@
       <div class="card">
  	<form id="marcas-datos-form" action="/marcas/new" method="POST">
 	  <div class="row mx-3">
-		<input type="hidden" id="marid" name="campo-id" value="<% mar.item('_id')%>">
-	    <div class="col form-group">
-		<label for="campo-mar">Rótulo</label>
-		<input type="text" class="form-control" id="campo-rot" name="rot" value="<% mar.rot %>">
-      	    </div>
-	    <div class="col form-group">
-	        <label for="campo-des">Descripción</label>
-        	<input type="text" class="form-control" id="campo-des" name="des" value="<% mar.des %>">
-      	    </div>
+		<input type="hidden" id="campo-_id" name="_id" value="<% mar.item('_id')%>">
 	    <div class="col form-group">
 		<label for="campo-cat">Categoría</label>
 		<select class="form-control" id="campo-cat" name="cat" value="<% mar.cat %>">
@@ -20,6 +12,14 @@
 			<option>Terapéutica</option>
 		</select>
 	    </div>
+	    <div class="col form-group">
+		<label for="campo-mar">Rótulo</label>
+		<input type="text" class="form-control" id="campo-rot" name="rot" value="<% mar.rot %>">
+      	    </div>
+	    <div class="col form-group">
+	        <label for="campo-des">Descripción</label>
+        	<input type="text" class="form-control" id="campo-des" name="des" value="<% mar.des %>">
+      	    </div>
 	    <div class="col form-group">
 		<label for="campo-col">Color</label>
 		<select class="selectpicker form-control" id="campo-col" name="col" value="<% mar.col %>">
@@ -41,29 +41,37 @@
 	</div>
  	</form>
      </div>
-	<% IF marcas.size %>
-	  <% FOREACH mar IN marcas %>
-	  <span id="<% mar.item('_id') %>" class="badge badge-<% PERL %> print qw(primary secondary success danger warning info dark)[<% mar.col %>-1]<% END %>">
-		<% mar.rot %>
-	  </span>&nbsp;
-	  <% END %>
+	<% IF cats.size %>
+	 <% FOREACH rec IN cats %>
+	   <h5><% rec.cat %></h5>
+	   <% FOREACH mar IN rec.pl %>
+		<span class="maredit" id="<%mar.item('_id')%>" onclick="marEditfun('<%mar.item('_id')%>');">
+			<span id="<% mar.item('_id') %>" class="badge badge-<% PERL %> print qw(primary secondary success danger warning info dark)[<% mar.col %>-1]<% END %>"> <% mar.rot %> </span>&nbsp;
+		</span>
+	     <% END %>
+  	     <hr>
+	   <% END %>
 	<% ELSE %>
 	  Sin marcas.
 	<% END %>
 </div>
 
 
-<!-------------------- FIN MODAL ------------------------------------->
+<!-------------------------------------------------------->
 
 <script src='javascripts/ajax.js'></script>
 
 <script>
+var lista = ["_id", "rot", "des", "cat", "col"];
+var marEditfun = (id) => { 
+	console.log(id); 
+	setFormData(id);
+};
 var marSave = document.getElementsByClassName("closeFormSave")[0];
 var marDel = document.getElementsByClassName("closeFormDel")[0];
-var idCursor;
 var marSavefun = () => {
-	idCursor= document.getElementById("marid").innerHTML;
-	var i = 'marcas/put/'+idCursor;
+	var id = document.getElementById("campo-_id").value;
+	var i = 'marcas/put/'+id;
 	var f = getFormData();
 
 	console.log(i, f);
@@ -74,33 +82,15 @@ marSave.onclick = marSavefun;
 marDel.onclick = marDelfun;
 var prevDoc = document.getElementsByClassName("prevDoc")[0];
 var nextDoc = document.getElementsByClassName("nextDoc")[0];
-var rowCursor;
-var maxRowCursor;
-var idOf = function(tr) {
-	var table = document.getElementById("table-insumos");
-	var rows = table.getElementsByTagName("tr");
-	maxRowCursor = rows.length - 1;
-	var row = rows[tr];
-	var id = row.id;
-	//console.log(id);
-	return id;
-};
 var prevDocfun = function() {
-	rowCursor = ((rowCursor - 1) < 1)? 0 : rowCursor - 1;
-	idCursor = idOf(rowCursor);
-	setContent(idCursor);
 };
 prevDoc.onclick = prevDocfun;
 var nextDocfun = function() {
-	rowCursor = ((rowCursor + 1) >= maxRowCursor) ? maxRowCursor : rowCursor + 1;
-	idCursor = idOf(rowCursor);
-	setContent(idCursor);
 };
 nextDoc.onclick = nextDocfun;
 var getFormData = function() {
-	var lista = ["rot", "des", "cat", "col"];
 	var j = {};
-	//j[ "_id" ] = idCursor;
+	var lista = ["rot", "des", "cat", "col"]; // no _id
 	for (var field in lista) {
 		var n = document.getElementById('campo-'+lista[field]).name;
 		var v = document.getElementById('campo-'+lista[field]).value;
@@ -109,36 +99,10 @@ var getFormData = function() {
 	return j;
 };
 var setById = (id,value) => { document.getElementById(id).innerHTML = value; };
-var fireModal = function(row) {
-	rowCursor = row.rowIndex;
-	idCursor = idOf(rowCursor);
-	setContent(idCursor);
-	document.onkeydown = function(e) {
-    		e = e || window.event;
-    		switch(e.which || e.keyCode) {
-			case 37: //left
-				prevDocfun();
-			break;
-			//case 38: //up break;
-			case 39: //right
-				nextDocfun();
-			break;
-			//case 40: //down break;
-			default: 
-			break;
-		}
-	};
-	modal.style.display="block"; 
-};
-var setContent = function(id) {
-	Ajax.get('insumos/view/'+id, (result) => {
+var setFormData = function(id) {
+	Ajax.get('marcas/view/'+id, (result) => {
 		var json = JSON.parse(result);
-		var titulo = json.art + ' ' + json.prov + ' ' + json.vol + ' ' + json.un;
-		setById('insumo-titulo',titulo);
-		//var borrar = document.getElementById('insumo-nombre-borrar');
-		//borrar.innerHTML = json.art;
-
-		var lista = ["art", "vol", "un", "prov", "pre"];
+		console.log(json);
 		for (var field in lista) {
 			var d = document.getElementById('campo-'+lista[field]);
 			d.value = json[lista[field]];
