@@ -22,6 +22,13 @@ sub get {
 	return $coll->find_id(mistique::marcas->makeOID("$id")); 
 }
 
+sub delete {
+	my ($self, $id) = @_;
+
+	my $result = $coll->delete_one({_id => mistique::marcas->makeOID("$id")}); 
+	return($result->acknowledged) ? 1 : 0;
+}
+
 sub get_as_JSON {
 	my ($self, $id) = @_;
 

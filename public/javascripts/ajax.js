@@ -6,6 +6,7 @@ Ajax.get = (url, callback) => {
 	xhr.onerror = () => {
 		console.error('Request failed!');
 	};
+	console.log(callback);
 	xhr.onload = () => {
 		if(xhr.readyState == 4 && xhr.status < 400) {
 			callback(xhr.responseText);

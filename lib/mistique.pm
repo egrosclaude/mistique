@@ -64,6 +64,13 @@ get '/marcas/view/:id' => sub {
 	return mistique::marcas->get_as_JSON($id);
 };
 
+get '/marcas/del/:id' => sub {
+        my $id = route_parameters->get('id'); 
+	if(mistique::marcas->delete($id)) {
+		delayed { content "200" ; }
+	}
+};
+
 put '/marcas/put/:id?' => sub {
 	my $id = route_parameters->get('id');
 	use Data::Dumper; print "mistique ".Dumper($id);

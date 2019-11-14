@@ -45,9 +45,7 @@
 	 <% FOREACH rec IN cats %>
 	   <h5><% rec.cat %></h5>
 	   <% FOREACH mar IN rec.pl %>
-		<span class="maredit" id="<%mar.item('_id')%>" onclick="marEditfun('<%mar.item('_id')%>');">
-			<span id="<% mar.item('_id') %>" class="badge badge-<% PERL %> print qw(primary secondary success danger warning info dark)[<% mar.col %>-1]<% END %>"> <% mar.rot %> </span>&nbsp;
-		</span>
+			<span id="<% mar.item('_id') %>" class="badge badge-pill badge-<% PERL %> print qw(primary secondary success danger warning info dark)[<% mar.col %>-1]<% END %>" data-toggle="tooltip" data-placement="top" title="<% mar.des %>" onclick="marEditfun('<%mar.item('_id')%>');"> <% mar.rot %> </span>&nbsp;
 	     <% END %>
   	     <hr>
 	   <% END %>
@@ -76,8 +74,18 @@ var marSavefun = () => {
 
 	console.log(i, f);
 	Ajax.put(i,f);
+	location.reload();
 };
-var marDelfun = () => {};
+var marDelfun = () => {
+	var id = document.getElementById("campo-_id").value;
+	var i = 'marcas/del/'+id;
+	var f = getFormData();
+
+	console.log(i, f);
+	Ajax.get(i,getFormData);
+	//Ajax.get('marcas',() => {});
+	location.reload();
+};
 marSave.onclick = marSavefun;
 marDel.onclick = marDelfun;
 var prevDoc = document.getElementsByClassName("prevDoc")[0];
